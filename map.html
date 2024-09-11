@@ -32,30 +32,32 @@
                 // Add more entries here from your data
 
             // Add markers to the map
+            const orangeMarkerIcon = {
+              url: "http://maps.google.com/mapfiles/ms/icons/orange-dot.png", // Custom orange icon
+            };
+
             locations.forEach(location => {
-                const marker = new google.maps.Marker({
-                    position: { lat: location.lat, lng: location.lng },
-                    map: map,
-                    title: location.immeuble,
-                });
+              const marker = new google.maps.Marker({
+                position: { lat: location.lat, lng: location.lng },
+                map: map,
+                icon: orangeMarkerIcon,  // Apply the custom icon here
+                title: location.nom,
+              });
 
-                // InfoWindow content
-                const infoContent = `
-                    <div>
-                        <strong>${location.bailleur}</strong><br>
-                        <p><strong>Nom de l'immeuble:</strong> ${location.immeuble}</p>
-                        <p><strong>Adresse:</strong> ${location.address}</p>
-                        <p><strong>Nombre de logements:</strong> ${location.logements}</p>
-                    </div>
-                `;
+            const infoWindow = new google.maps.InfoWindow({
+               content: `
+                 <div>
+                   <h4><strong>Bailleur social:</strong> ${location.bailleur}</h4>
+                   <p><strong>Nom de l'immeuble:</strong> ${location.nom}</p>
+                   <p><strong>Address:</strong> ${location.adresse}</p>
+                   <p><strong>Numero de logements:</strong> ${location.logements}</p>
+                 </div>
+               `,
+             });
 
-                const infoWindow = new google.maps.InfoWindow({
-                    content: infoContent,
-                });
-
-                marker.addListener('click', () => {
-                    infoWindow.open(map, marker);
-                });
+            marker.addListener("click", () => {
+                infoWindow.open(map, marker);
+              });
             });
         }
     </script>
