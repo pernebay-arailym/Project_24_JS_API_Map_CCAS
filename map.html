@@ -1,49 +1,68 @@
 <!DOCTYPE html>
-<html>
-  <head>
-    <title>My Google Map</title>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Map with Info Windows</title>
     <style>
-      /* Always set the map height explicitly to define the size of the div
-      * element that contains the map. */
-      #map {
-        height: 100%;
-      }
-
-      /* Optional: Makes the sample page fill the window. */
-      html,
-      body {
-        height: 100%;
-        margin: 0;
-        padding: 0;
-      }
+        #map {
+            height: 100%;
+        }
+        html, body {
+            height: 100%;
+            margin: 0;
+            padding: 0;
+        }
     </style>
-  </head>
-  <body>
+</head>
+<body>
     <div id="map"></div>
-
     <script>
-      function initMap() {
-        // The location of the center point
-        const centerPoint = { lat: 48.8566, lng: 2.3522 }; // Example: Paris coordinates
-        
-        // The map, centered at the chosen location
-        const map = new google.maps.Map(document.getElementById("map"), {
-          zoom: 10,
-          center: centerPoint,
-        });
+        let map;
 
-        // Example marker
-        const marker = new google.maps.Marker({
-          position: centerPoint,
-          map: map,
-        });
-      }
+        function initMap() {
+            // Initialize the map centered around a specific location
+            map = new google.maps.Map(document.getElementById('map'), {
+                center: { lat: 43.6629, lng: 7.1485 }, // Cagnes-sur-Mer coordinates
+                zoom: 14,
+            });
+
+            // Data array
+            const locations = [{'lat': 43.65502, 'lng': 7.15731, 'bailleur': 'ERILIA', 'nom': 'Les Logis de la Mer', 'adresse': '6,\xa0 avenue de la Serre', 'logements': 49}, {'lat': 43.66933, 'lng': 7.16553, 'bailleur': 'ERILIA', 'nom': 'Les Logis du Val Fleuri', 'adresse': '99,\xa0 chemin du Val Fleuri', 'logements': 86}, {'lat': 43.65842, 'lng': 7.14573, 'bailleur': 'ERILIA', 'nom': 'Le Cytise', 'adresse': '29,\xa0 avenue de Villeneuve', 'logements': 28}, {'lat': 43.6573, 'lng': 7.14731, 'bailleur': 'ERILIA', 'nom': 'Agora', 'adresse': '35,\xa0 avenue de la gare', 'logements': 20}, {'lat': 43.65848, 'lng': 7.14122, 'bailleur': 'ERILIA', 'nom': 'Côté jardin', 'adresse': '44,\xa0 route de Grasse', 'logements': 24}, {'lat': 43.661, 'lng': 7.13401, 'bailleur': 'ERILIA', 'nom': 'Les Astérines', 'adresse': '73,\xa0 avenue des Alpes', 'logements': 41}, {'lat': 43.66828, 'lng': 7.15174, 'bailleur': 'ERILIA', 'nom': 'Rabah', 'adresse': '41,\xa0 avenue de la Gaude', 'logements': 1}, {'lat': 43.662758, 'lng': '\xa07.129072', 'bailleur': 'ERILIA', 'nom': "L'althéa", 'adresse': '165,\xa0 chemin de la Santoline', 'logements': 40}, {'lat': 43.66447, 'lng': 7.15445, 'bailleur': 'ERILIA', 'nom': 'Le Virginia I', 'adresse': '8/10,\xa0 avenue Cyrille Besset', 'logements': 15}, {'lat': 43.65857, 'lng': 7.13607, 'bailleur': 'ERILIA', 'nom': 'Le Saint Vérano', 'adresse': '6,\xa0 chemin du Collet des Grailles', 'logements': 9}, {'lat': 43.66306, 'lng': 7.13109, 'bailleur': 'ERILIA', 'nom': 'Bella Vita', 'adresse': '105,\xa0 avenue des Alpes', 'logements': 6}, {'lat': 43.6653, 'lng': 7.14665, 'bailleur': 'ERILIA', 'nom': 'Villa Floraly', 'adresse': 'Montée des Coteaux,\xa0 Cagnes-sur-Mer', 'logements': 9}, {'lat': 43.65985, 'lng': 7.13188, 'bailleur': 'ERILIA', 'nom': 'Villa Malaussena\xa0', 'adresse': '81,\xa0 avenue de Grasse', 'logements': 12}, {'lat': 43.66484, 'lng': 7.15426, 'bailleur': 'ERILIA', 'nom': 'Le Virginia II', 'adresse': '4/6,\xa0 avenue Cyrille Besset', 'logements': 39}, {'lat': 43.66241, 'lng': 7.14843, 'bailleur': 'ERILIA', 'nom': 'Patio Renoir\xa0', 'adresse': '4,\xa0 avenue de Verdun', 'logements': 21}, {'lat': 43.66292, 'lng': 7.14858, 'bailleur': 'ERILIA', 'nom': 'Patio Renoir - ULS', 'adresse': "7,\xa0 avenue de l'hôtel de ville", 'logements': 11}, {'lat': 43.65963, 'lng': 7.13369, 'bailleur': 'ERILIA', 'nom': "Les jardins d'Auguste", 'adresse': '84,\xa0 avenue de Grasse', 'logements': 84}, {'lat': 43.66307, 'lng': 7.14972, 'bailleur': 'ERILIA', 'nom': 'Le Massenet', 'adresse': '5,\xa0 avenue Massenet', 'logements': 17}, {'lat': 43.66694, 'lng': 7.1681, 'bailleur': 'ERILIA', 'nom': 'Le Val des Anges', 'adresse': '72,\xa0 chemin du Val Fleuri', 'logements': 30}, {'lat': 43.66567, 'lng': 7.12557, 'bailleur': 'ERILIA', 'nom': 'Le Bel Air', 'adresse': '1,\xa0 rue Lecat', 'logements': 9}, {'lat': 43.66192, 'lng': 7.17281, 'bailleur': 'ERILIA', 'nom': "L'Isle aux Oliviers", 'adresse': '22,\xa0 chemin du Val Fleuri', 'logements': 6}, {'lat': 43.65475, 'lng': 7.14975, 'bailleur': 'ERILIA', 'nom': 'Le Bel Horizon', 'adresse': '12,\xa0 avenue de Cannes', 'logements': 10}, {'lat': 43.66301, 'lng': 7.13402, 'bailleur': 'ERILIA', 'nom': 'Eden Green\xa0', 'adresse': '52,\xa0 route de France', 'logements': 12}, {'lat': 43.65879, 'lng': 7.1323, 'bailleur': 'ERILIA', 'nom': 'Villa Eugénie', 'adresse': '17,\xa0 chemin des campanettes', 'logements': 16}, {'lat': 43.66306, 'lng': 7.14933, 'bailleur': 'ERILIA', 'nom': 'Les Cordelles', 'adresse': '10,\xa0 rue Général Bérenger', 'logements': 9}, {'lat': 43.67422, 'lng': 7.16374, 'bailleur': 'ERILIA', 'nom': 'Villa Jardin', 'adresse': '23,\xa0 chemin de la campanette', 'logements': 14}, {'lat': 43.66306, 'lng': 7.14933, 'bailleur': 'ERILIA', 'nom': 'Le Rigaudon\xa0', 'adresse': '8,\xa0 rue Général Bérenger', 'logements': 12}, {'lat': 43.65704, 'lng': 7.14551, 'bailleur': 'ERILIA', 'nom': "L'Intemporel", 'adresse': '17,\xa0 avenue de Grasse', 'logements': 15}, {'lat': 43.66404, 'lng': 7.17438, 'bailleur': 'ERILIA', 'nom': 'Hérakléia', 'adresse': '12,\xa0 chemin des Espartes', 'logements': 35}, {'lat': 43.65783, 'lng': 7.14363, 'bailleur': 'ERILIA', 'nom': '23 Riviéra', 'adresse': '23,\xa0 avenue de Grasse', 'logements': 9}, {'lat': 43.6583, 'lng': 7.16097, 'bailleur': 'ERILIA', 'nom': 'Le Daniella', 'adresse': '66,\xa0 avenue de Nice', 'logements': 13}, {'lat': 43.67258, 'lng': 7.1618, 'bailleur': 'ERILIA', 'nom': "Le Val d'Or", 'adresse': '23,\xa0 chemin du vallon des Vaux', 'logements': 16}, {'lat': 43.66032, 'lng': 7.17399, 'bailleur': 'ERILIA', 'nom': 'Le Florazur', 'adresse': '145 avenue de Nice,\xa0 Cagnes-sur-Mer', 'logements': 14}, {'lat': 43.671866, 'lng': '\xa07.162895', 'bailleur': 'ERILIA', 'nom': 'Le Val Cosy', 'adresse': '9 bis,\xa0 chemin du vallon des Vaux', 'logements': 10}, {'lat': 43.67108, 'lng': 7.16569, 'bailleur': 'ERILIA', 'nom': 'Les Œillets (Terrain Franca)', 'adresse': '2-4-6,\xa0 chemin des Gros Buaux', 'logements': 35}, {'lat': 43.67765, 'lng': 7.14918, 'bailleur': 'ERILIA', 'nom': 'Le Hameau', 'adresse': '22,\xa0 chemin du val de Cagnes', 'logements': 78}, {'lat': 43.65876, 'lng': '7.157630', 'bailleur': 'ERILIA', 'nom': 'Le Grey pearl', 'adresse': '7/9,\xa0 rue Jules Ladoumegues', 'logements': 12}, {'lat': 43.66134, 'lng': 7.1527, 'bailleur': 'ERILIA', 'nom': 'Riviéra Square', 'adresse': '2,\xa0 passage du Moulin', 'logements': 46}, {'lat': 43.66325, 'lng': 7.14709, 'bailleur': 'ERILIA', 'nom': 'Les Terrasses du Château\xa0', 'adresse': '41 Avenue De Verdun', 'logements': 27}, {'lat': 43.65917, 'lng': 7.15485, 'bailleur': 'ERILIA', 'nom': 'Rive de Cagnes\xa0', 'adresse': '3,\xa0 chemin du Lautin', 'logements': 20}, {'lat': 43.65765, 'lng': 7.17605, 'bailleur': 'ERILIA\xa0', 'nom': 'Villa Vespins\xa0', 'adresse': '10 avenue des Vespins,\xa0 Cagnes-sur-Mer', 'logements': 8}, {'lat': 43.65977, 'lng': 7.13232, 'bailleur': 'ERILIA\xa0', 'nom': 'Patio Riviera\xa0', 'adresse': '79 avenue de Grasse,\xa0 Cagnes-sur-Mer', 'logements': 12}, {'lat': 43.65542, 'lng': 7.15622, 'bailleur': "CÔTE D'AZUR HABITAT", 'nom': 'Le Cros (en vente)', 'adresse': 'Rue de Paris,\xa0 Cagnes-sur-Mer', 'logements': 9}, {'lat': 43.6625, 'lng': 7.14831, 'bailleur': "CÔTE D'AZUR HABITAT", 'nom': 'Les Galets', 'adresse': '59,\xa0 avenue de Verdun', 'logements': 72}, {'lat': 43.66916, 'lng': 7.13513, 'bailleur': "CÔTE D'AZUR HABITAT", 'nom': 'Le Colombier', 'adresse': '3,\xa0 chemin des travails', 'logements': 41}, {'lat': 43.65931, 'lng': 7.1442, 'bailleur': "CÔTE D'AZUR HABITAT", 'nom': 'Les Feuillantines', 'adresse': '30,\xa0 rue des Reynes', 'logements': 52}, {'lat': 43.65842, 'lng': 7.14573, 'bailleur': "CÔTE D'AZUR HABITAT", 'nom': 'Le Concorde', 'adresse': '19,\xa0 avenue de Villeneuve', 'logements': 40}, {'lat': 43.66586, 'lng': 7.14969, 'bailleur': "CÔTE D'AZUR HABITAT", 'nom': 'La Goélette', 'adresse': '2,\xa0 rue Edouard Robion', 'logements': 12}, {'lat': 43.65877, 'lng': 7.14539, 'bailleur': "CÔTE D'AZUR HABITAT", 'nom': 'Les Hibiscus', 'adresse': '9,\xa0 rue des Reynes', 'logements': 12}, {'lat': 43.65931, 'lng': 7.16663, 'bailleur': "CÔTE D'AZUR HABITAT", 'nom': 'APREH Foyer La Terrasse', 'adresse': '99,\xa0 avenue de Nice', 'logements': 9}, {'lat': 43.65842, 'lng': 7.14573, 'bailleur': "CÔTE D'AZUR HABITAT", 'nom': 'Villa Béatrice', 'adresse': '32,\xa0 avenue de Villeneuve', 'logements': 47}, {'lat': 43.66102, 'lng': 7.14957, 'bailleur': "CÔTE D'AZUR HABITAT", 'nom': 'Résidence du Puits', 'adresse': '5,\xa0 rue du Docteur Louis Féraud', 'logements': 57}, {'lat': 43.668229, 'lng': '7.166789', 'bailleur': "CÔTE D'AZUR HABITAT", 'nom': 'Villa Flora', 'adresse': '89,\xa0 chemin du Val Fleuri', 'logements': 16}, {'lat': 43.66579, 'lng': 7.14866, 'bailleur': 'I.C.F SUD-EST', 'nom': 'Le Cigalon', 'adresse': '26,\xa0 rue Jean Feraud', 'logements': 9}, {'lat': 43.65703, 'lng': 7.17358, 'bailleur': 'I.C.F SUD-EST', 'nom': 'Lou Palangre', 'adresse': '110,\xa0 promenade de la plage', 'logements': 11}, {'lat': 43.6682, 'lng': 7.14772, 'bailleur': 'I.C.F SUD-EST', 'nom': 'Villa Ste Luce', 'adresse': '12 chemin des Canebiers,\xa0 Cagnes-sur-Mer', 'logements': 15}, {'lat': 43.6695, 'lng': 7.16249, 'bailleur': 'I.C.F SUD-EST', 'nom': 'Les Terrasses du Tuilières', 'adresse': '66,\xa0 avenue des Tuilières', 'logements': 12}, {'lat': 43.66652, 'lng': '7.149536', 'bailleur': 'I.C.F SUD-EST', 'nom': 'Le Bellagio', 'adresse': 'Ch. des canebiers / rue Robion,\xa0 Cagnes-sur-Mer', 'logements': 28}, {'lat': 43.66763, 'lng': 7.14596, 'bailleur': 'HABITAT 06', 'nom': 'Les Canebiers', 'adresse': 'rue Soutine,\xa0 rue Charles Perrault', 'logements': 188}, {'lat': 43.66197, 'lng': 7.1497, 'bailleur': 'HABITAT 06', 'nom': 'Les Palmiers', 'adresse': '1,\xa0 rue des palmiers', 'logements': 4}, {'lat': 43.66168, 'lng': 7.1493, 'bailleur': 'HABITAT 06', 'nom': 'Graglia', 'adresse': '2,\xa0 cours du 11 novembre', 'logements': 5}, {'lat': 43.66598, 'lng': 7.14791, 'bailleur': 'HABITAT 06', 'nom': 'Les Chênes', 'adresse': '9,\xa0 montée du Pérousin', 'logements': 9}, {'lat': 43.667081, 'lng': '7.1454681', 'bailleur': 'HABITAT 06', 'nom': 'Suzy Solidor', 'adresse': 'Rue du Piolet - Haut de Cagnes,\xa0 Cagnes-sur-Mer', 'logements': 5}, {'lat': 43.66497, 'lng': 7.12367, 'bailleur': 'HABITAT 06', 'nom': 'Villa Catherine', 'adresse': '80,\xa0 avenue de la Colle', 'logements': 25}, {'lat': 43.67366, 'lng': 7.16091, 'bailleur': 'HABITAT 06', 'nom': 'Santa Maria', 'adresse': '117,\xa0 chemin du vallon des Vaux', 'logements': 16}, {'lat': 43.65764, 'lng': 7.14422, 'bailleur': 'LOGIS FAMILIAL', 'nom': 'Le Colisée', 'adresse': '16,\xa0 avenue de Grasse', 'logements': 62}, {'lat': 43.66018, 'lng': 7.13106, 'bailleur': 'LOGIS FAMILIAL', 'nom': 'Les Hauts Malvans (en vente)', 'adresse': '102,\xa0 avenue de Grasse', 'logements': 14}, {'lat': 43.66464, 'lng': 7.14472, 'bailleur': 'LOGIS FAMILIAL', 'nom': 'Les Alizés', 'adresse': '65,\xa0 avenue de Verdun', 'logements': 37}, {'lat': 43.65798, 'lng': 7.14432, 'bailleur': 'LOGIS FAMILIAL', 'nom': 'Le Palazetto', 'adresse': '25,\xa0 rue Pasteur', 'logements': 38}, {'lat': 43.65671, 'lng': 7.14596, 'bailleur': 'LOGIS FAMILIAL', 'nom': 'Le Saint Véran', 'adresse': '3,\xa0 avenue de Grasse', 'logements': 16}, {'lat': 43.66323, 'lng': 7.17237, 'bailleur': 'LOGIS FAMILIAL', 'nom': 'Villa Fiori', 'adresse': '36,\xa0 chemin du val fleuri', 'logements': 70}, {'lat': 43.66303, 'lng': 7.13496, 'bailleur': 'Logis familial', 'nom': 'Naturéa', 'adresse': '72 route de France,\xa0 Cagnes-sur-Mer', 'logements': 34}, {'lat': 43.66114, 'lng': '7.1451350', 'bailleur': 'CDC Habitat social', 'nom': 'Le Saint Clair', 'adresse': '27 Av. Dr Maurice Donat', 'logements': 19}, {'lat': 43.66049, 'lng': 7.14591, 'bailleur': 'CDC Habitat social', 'nom': 'Le Diamond', 'adresse': '15,\xa0 avenue du Docteur Donat', 'logements': 27}, {'lat': 43.66311, 'lng': 7.17672, 'bailleur': 'CDC Habitat social', 'nom': 'Les Espartes', 'adresse': '29,\xa0 chemin des Espartes', 'logements': 29}, {'lat': 43.66043, 'lng': 7.16401, 'bailleur': 'CDC Habitat social', 'nom': 'Villa Bellevue', 'adresse': '8,\xa0 avenue des roses', 'logements': 8}, {'lat': 43.66687, 'lng': 7.14026, 'bailleur': 'CDC Habitat social', 'nom': 'Le Misaudor', 'adresse': '7,\xa0 chemin des travails', 'logements': 14}, {'lat': 43.66362, 'lng': 7.14478, 'bailleur': 'CDC Habitat social', 'nom': 'Princess Riviera', 'adresse': '7,\xa0 impasse des Espartes', 'logements': 28}, {'lat': 43.65908, 'lng': 7.13668, 'bailleur': 'CDC Habitat social', 'nom': 'Les Oliviers', 'adresse': '70,\xa0 avenue de Grasse', 'logements': 22}, {'lat': 43.6722, 'lng': 7.16234, 'bailleur': 'CDC Habitat social', 'nom': 'Esprit Sud', 'adresse': '19 Chemin du Vallon des Vaux,\xa0 Cagnes-sur-Mer', 'logements': 14}, {'lat': 43.6667, 'lng': 7.14541, 'bailleur': '3F Sud', 'nom': 'Cœur de Cagnes', 'adresse': '1 Place Gabriel Péri,\xa0 Cagnes-sur-Mer', 'logements': 8}, {'lat': 43.66126, 'lng': 7.12849, 'bailleur': '3F Sud', 'nom': 'Dolce Riviera', 'adresse': '12 avenue de la Colle,\xa0 Cagnes-sur-Mer', 'logements': 16}, {'lat': 43.66916, 'lng': 7.13513, 'bailleur': 'LOGIREM', 'nom': 'Villa Soléa', 'adresse': 'Chemin des travails,\xa0 Cagnes-sur-Mer', 'logements': 20}, {'lat': 43.67226, 'lng': 7.13759, 'bailleur': 'UNICIL', 'nom': 'Les Terrasses du Soleil', 'adresse': '40,\xa0 chemin Sainte-Colombe', 'logements': 7}, {'lat': 43.67001, 'lng': 7.16467, 'bailleur': 'UNICIL\xa0', 'nom': 'Domaines du Val\xa0', 'adresse': '107 chemin du Val Fleuri,\xa0 Cagnes-sur-Mer', 'logements': 56}, {'lat': 43.66026, 'lng': 7.16949, 'bailleur': 'UNICIL\xa0', 'nom': 'Val de Cros', 'adresse': '6,\xa0 avenue de Val en Sol', 'logements': 6}, {'lat': 43.668883, 'lng': '7.126788', 'bailleur': "IN'LI PACA", 'nom': 'Oléa', 'adresse': '23/27,\xa0 chemin de Saint-Jean', 'logements': 23}, {'lat': 43.66244, 'lng': 7.1551, 'bailleur': "IN'LI PACA", 'nom': 'Le Coramer', 'adresse': '39,\xa0 rue Cyrille Besset', 'logements': 5}, {'lat': 43.65704, 'lng': 7.14551, 'bailleur': "IN'LI PACA", 'nom': 'Le Saint Jacques', 'adresse': '62,\xa0 avenue de Grasse', 'logements': 3}, {'lat': 43.67226, 'lng': 7.13759, 'bailleur': "IN'LI PACA", 'nom': 'Les Terrasses du Soleil', 'adresse': '40,\xa0 chemin Sainte-Colombe', 'logements': 16}, {'lat': 43.660494, 'lng': '7.144695', 'bailleur': "IN'LI PACA", 'nom': 'Les Tamaris', 'adresse': '9,\xa0 rue Jules Vernes', 'logements': 3}, {'lat': 43.65971, 'lng': 7.15788, 'bailleur': "IN'LI PACA", 'nom': 'Les Santolines', 'adresse': '69,\xa0 avenue Cyrille Besset', 'logements': 4}, {'lat': 43.65973, 'lng': 7.13316, 'bailleur': 'ADOMA (CDC HS)', 'nom': 'Les Lierres', 'adresse': '88,\xa0 avenue de Grasse', 'logements': 133}, {'lat': 43.658125, 'lng': '7.163831', 'bailleur': 'Poste Habitat Provence', 'nom': 'Le Cahna Mare', 'adresse': 'Angle av. Delattre Tassigny/av. Gal Leclerc,\xa0 Cagnes-sur-Mer', 'logements': 10}, {'lat': 43.65921, 'lng': 7.16396, 'bailleur': 'Foncière de logement', 'nom': 'Bay Side', 'adresse': '83,\xa0 avenue de Nice', 'logements': 9}, {'lat': 43.65805, 'lng': 7.14429, 'bailleur': 'Foncière de logement', 'nom': 'Cagnes Azur', 'adresse': '24 rue Pasteur,\xa0 Cagnes-sur-Mer', 'logements': 20}, {'lat': 43.66059, 'lng': 7.14929, 'bailleur': 'Foncière de logement', 'nom': 'Le carré des Cavaliers', 'adresse': '4 & 6 rue Pasqualini,\xa0 Cagnes-sur-Mer', 'logements': 29}, {'lat': 43.67353, 'lng': 7.16086, 'bailleur': 'Foncière de logement', 'nom': 'Villa Modigliani', 'adresse': '35 chemin du Vallon des Vaux,\xa0 Cagnes-sur-Mer', 'logements': 19}, {'lat': 43.6661, 'lng': 7.15364, 'bailleur': 'ULISS', 'nom': 'Le Mas Saint Jean', 'adresse': '68,\xa0 avenue de la Gaude', 'logements': 5}, {'lat': 43.66798, 'lng': 7.14946, 'bailleur': 'SARL SGA', 'nom': 'Le Hameau de Renoir', 'adresse': '34 chemin des Tuillières,\xa0 Cagnes-sur-Mer', 'logements': 4}, {'lat': 43.66643, 'lng': 7.1739, 'bailleur': 'SAGESTIM', 'nom': "Village d'or", 'adresse': 'Chemin des Lavandins,\xa0 Cagnes-sur-Mer', 'logements': 27}, {'lat': 43.663826, 'lng': '7.1494125', 'bailleur': 'PERSONNE PHYSIQUE', 'nom': 'Particuliers', 'adresse': '\xa0Cagnes-sur-Mer', 'logements': 38}];
+                // Add more entries here from your data
+
+            // Add markers to the map
+            locations.forEach(location => {
+                const marker = new google.maps.Marker({
+                    position: { lat: location.lat, lng: location.lng },
+                    map: map,
+                    title: location.immeuble,
+                });
+
+                // InfoWindow content
+                const infoContent = `
+                    <div>
+                        <strong>${location.bailleur}</strong><br>
+                        <p><strong>Nom de l'immeuble:</strong> ${location.immeuble}</p>
+                        <p><strong>Adresse:</strong> ${location.address}</p>
+                        <p><strong>Nombre de logements:</strong> ${location.logements}</p>
+                    </div>
+                `;
+
+                const infoWindow = new google.maps.InfoWindow({
+                    content: infoContent,
+                });
+
+                marker.addListener('click', () => {
+                    infoWindow.open(map, marker);
+                });
+            });
+        }
     </script>
 
-    <script
-      async
-      defer
-      src="https://maps.googleapis.com/maps/api/js?key=GOOGLE_MAPS_API_KEY&callback=initMap"
-    ></script>
-  </body>
+    <!-- Google Maps JavaScript API -->
+    <script async defer 
+        src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCJ5JLo3H30xrPqVzMmz50l95ygEfK3cHw&callback=initMap">
+    </script>
+</body>
 </html>
